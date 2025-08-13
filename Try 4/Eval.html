@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Evaluation</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f8f9fa;
+  color: #333;
+}
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+form {
+  max-width: 700px;
+  margin: 0 auto 30px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+label {
+  display: block;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  background: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+}
+label:hover {
+  background: #ddd;
+}
+input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.2);
+  vertical-align: middle;
+}
+button {
+  display: block;
+  margin: 20px auto 0 auto;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+button:hover {
+  background-color: #4cae4c;
+}
+#customComment {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  resize: vertical;
+}
+</style>
+</head>
+<body>
+<h2>Student Evaluation</h2>
+<div id="info" style="text-align:center; margin-bottom:20px; font-weight:bold;"></div>
+<form id="evaluationForm"></form>
+
+<label for="customComment" style="font-weight:bold; margin-top: 20px;">Add a Custom Comment:</label>
+<textarea id="customComment" rows="3" placeholder="Type your custom comment here..."></textarea>
+
+<button id="submitBtn">Submit</button>
+
+<script>
+const optionsData = {
+  notMeeting: [
+    "Incomplete or missing assignments",
+    "Lack of class participation",
+    "Disruptive or off-task behavior",
+    "Frequent lateness or absences",
+    "Poor time management",
+    "Minimal effort in tasks",
+    "Failure to follow instructions",
+    "Difficulty understanding the material",
+    "Does not seek help when needed",
+    "Negative attitude toward learning",
+    "Unprepared for class",
+    "Low-quality or rushed work"
+  ],
+  meeting: [
+    "Regularly completes assignments",
+    "Participates in class when required",
+    "Behaves appropriately and respectfully",
+    "Demonstrates a basic understanding of content",
+    "Submits work on time",
+    "Follows instructions accurately",
+    "Engages with peers and teacher appropriately",
+    "Shows consistent effort",
+    "Manages time effectively",
+    "Responds well to feedback"
+  ],
+  above: [
+    "Consistently exceeds assignment criteria",
+    "Demonstrates deep understanding of content",
+    "Shows leadership in group work or discussions",
+    "Offers thoughtful insights or original ideas",
+    "Always submits high-quality work",
+    "Seeks additional challenges or learning opportunities",
+    "Helps peers with learning",
+    "Demonstrates strong independent learning skills",
+    "Maintains a positive, proactive attitude",
+    "Goes beyond expectations in participation or contribution"
+  ],
+  howMeeting: [
+    "By completing tasks with care and accuracy",
+    "By actively listening and following directions",
+    "By showing growth through effort and feedback",
+    "By managing time and responsibilities",
+    "By engaging positively in group work",
+    "By asking questions and clarifying when needed",
+    "By staying on task during activities",
+    "By demonstrating respect and cooperation"
+  ],
+  howAbove: [
+    "By extending learning through independent research",
+    "By applying critical thinking and problem-solving",
+    "By taking initiative in learning and class tasks",
+    "By leading and motivating peers",
+    "By producing work of exceptional quality",
+    "By consistently going above and beyond expectations"
+  ]
+};
+
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+const studentName = getQueryParam("student") || "Unknown Student";
+const week = getQueryParam("week") || "week1to3";
+
+document.getElementById("info").textContent = `Evaluating: ${studentName} (${week})`;
+
+const form = document.getElementById("evaluationForm");
+
+function createCheckboxGroup(title, options, groupName) {
+  const container = document.createElement("div");
+  container.style.marginBottom = "15px";
+
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+  container.appendChild(heading);
+
+  options.forEach(opt => {
+    const label = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = groupName;
+    checkbox.value = opt;
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(opt));
+    container.appendChild(label);
+  });
+
+  return container;
+}
+
+// Add sections
+form.appendChild(createCheckboxGroup("Student is Not Meeting Expectations", optionsData.notMeeting, "notMeeting"));
+form.appendChild(createCheckboxGroup("Student is Meeting Expectations", optionsData.meeting, "meeting"));
+form.appendChild(createCheckboxGroup("Student is Meeting Above Expectations", optionsData.above, "above"));
+
+// Combine improvement sections
+const combinedImprovementOptions = optionsData.howMeeting.concat(optionsData.howAbove);
+form.appendChild(
+  createCheckboxGroup(
+    "What the student needs to do to improve their performance",
+    combinedImprovementOptions,
+    "improvement"
+  )
+);
+
+document.getElementById("submitBtn").addEventListener("click", () => {
+  const selectedComments = [];
+  ["notMeeting", "meeting", "above", "improvement"].forEach(groupName => {
+    const checkedBoxes = form.querySelectorAll(`input[name=${groupName}]:checked`);
+    checkedBoxes.forEach(cb => selectedComments.push(cb.value));
+  });
+
+  const customComment = document.getElementById("customComment").value.trim();
+  if (customComment.length > 0) {
+    selectedComments.push(customComment);
+  }
+
+  if (window.opener) {
+    window.opener.postMessage({
+      type: "evaluationSubmit",
+      selectedComments,
+      studentName,
+      week
+    }, "*");
+    window.close();
+  } else {
+    alert("Main window not found. Cannot submit evaluation.");
+  }
+});
+</script>
+</body>
+</html>

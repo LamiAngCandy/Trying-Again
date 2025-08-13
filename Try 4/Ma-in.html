@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Weekly Table</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+}
+table {
+  width: 95%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  table-layout: fixed;
+}
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+  vertical-align: top;
+  word-wrap: break-word;
+}
+th {
+  font-weight: bold;
+}
+colgroup col.name {
+  width: 30%;
+}
+colgroup col.extra {
+  width: 20%;
+}
+colgroup col.week {
+  width: 16.66%;
+}
+.week-blank {
+  border-bottom: none;
+}
+.week-comment {
+  font-size: 12px;
+  text-align: center;
+  padding: 10px;
+  height: auto;
+  white-space: normal;
+}
+.extra-cell {
+  height: 100px;
+}
+.reset-button {
+  text-align: center;
+  margin-top: 20px;
+}
+.reset-button button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.reset {
+  background-color: #d9534f;
+  color: white;
+}
+.reset:hover {
+  background-color: #c9302c;
+}
+.student-fr-btn {
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 4px 10px;
+  background-color: #0275d8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.student-fr-btn:hover {
+  background-color: #025aa5;
+}
+select.grade-select {
+  width: 90%;
+  padding: 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.comment-add-button {
+  padding: 6px 12px;
+  font-size: 12px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: normal;
+  word-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+}
+.comment-add-button:hover {
+  background-color: #4cae4c;
+}
+.comment-list {
+  text-align: left;
+  font-size: 12px;
+  margin-top: 4px;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 2px 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fafafa;
+}
+.fortnight-label {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+.criteria {
+  width: 90%;
+  margin: 30px auto;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.criteria h3 {
+  margin-top: 0;
+}
+</style>
+</head>
+<body>
+<div class="reset-button">
+  <button class="reset" onclick="resetAll()">Reset All</button>
+</div>
+<table>
+  <colgroup>
+    <col class="name" />
+    <col class="extra" />
+    <col class="week" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th></th>
+      <th>Fortnightly grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Mar Nino -->
+    <tr>
+      <td rowspan="6">
+        Mar Nino<br />
+        <button class="student-fr-btn" onclick="openStudentFR('Mar Nino')">Student's FR</button>
+      </td>
+      <td class="extra-cell" rowspan="6"></td>
+      <td class="week-blank" id="Mar Nino-week1to3a">
+        <div class="fortnight-label">1. Effort</div>
+        <select class="grade-select" onchange="saveGrade('Mar Nino-week1to3a', this.value)">
+          <option value="">Select</option>
+          <option value="1">1 – Needs significant improvement</option>
+          <option value="2">2 – Working towards expectations</option>
+          <option value="3">3 – Meets expectations</option>
+          <option value="4">4 – Exceeds expectations</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="week-comment" id="comment-Mar Nino-week1to3a"></td>
+    </tr>
+    <tr>
+      <td class="week-blank" id="Mar Nino-week1to3b">
+        <div class="fortnight-label">2. Behaviour and Attitude</div>
+        <select class="grade-select" onchange="saveGrade('Mar Nino-week1to3b', this.value)">
+          <option value="">Select</option>
+          <option value="1">1 – Needs significant improvement</option>
+          <option value="2">2 – Working towards expectations</option>
+          <option value="3">3 – Meets expectations</option>
+          <option value="4">4 – Exceeds expectations</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="week-comment" id="comment-Mar Nino-week1to3b"></td>
+    </tr>
+    <tr>
+      <td class="week-blank" id="Mar Nino-week1to3c">
+        <div class="fortnight-label">3. Engagement & Attendance</div>
+        <select class="grade-select" onchange="saveGrade('Mar Nino-week1to3c', this.value)">
+          <option value="">Select</option>
+          <option value="1">1 – Needs significant improvement</option>
+          <option value="2">2 – Working towards expectations</option>
+          <option value="3">3 – Meets expectations</option>
+          <option value="4">4 – Exceeds expectations</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="week-comment" id="comment-Mar Nino-week1to3c">
+        <button class="comment-add-button" onclick="openEvaluationNewTab('Mar Nino', 'week1to3', this)">Add</button>
+      </td>
+    </tr>
+
+    <!-- Saturo -->
+    <tr>
+      <td rowspan="6">
+        Saturo<br />
+        <button class="student-fr-btn" onclick="openStudentFR('Saturo')">Student's FR</button>
+      </td>
+      <td class="extra-cell" rowspan="6"></td>
+      <td class="week-blank" id="Saturo-week1to3a">
+        <div class="fortnight-label">1. Effort</div>
+        <select class="grade-select" onchange="saveGrade('Saturo-week1to3a', this.value)">
+          <option value="">Select</option>
+          <option value="1">1 – Needs significant improvement</option>
+          <option value="2">2 – Working towards expectations</option>
+          <option value="3">3 – Meets expectations</option>
+          <option value="4">4 – Exceeds expectations</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="week-comment" id="comment-Saturo-week1to3a"></td>
+    </tr>
+    <tr>
+      <td class="week-blank" id="Saturo-week1to3b">
+        <div class="fortnight-label">2. Behaviour and Attitude</div>
+        <select class="grade-select" onchange="saveGrade('Saturo-week1to3b', this.value)">
+          <option value="">Select</option>
+          <option value="1">1 – Needs significant improvement</option>
+          <option value="2">2 – Working towards expectations</option>
+          <option value="3">3 – Meets expectations</option>
+          <option value="4">4 – Exceeds expectations</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="week-comment" id="comment-Saturo-week1to3b"></td>
+    </tr>
+    <tr>
+      <td class="week-blank" id="Saturo-week1to3c">
+        <div class="fortnight-label">3. Engagement & Attendance</div>
+        <select class="grade-select" onchange="saveGrade('Saturo-week1to3c', this.value)">
+          <option value="">Select</option>
+          <option value="1">1 – Needs significant improvement</option>
+          <option value="2">2 – Working towards expectations</option>
+          <option value="3">3 – Meets expectations</option>
+          <option value="4">4 – Exceeds expectations</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="week-comment" id="comment-Saturo-week1to3c">
+        <button class="comment-add-button" onclick="openEvaluationNewTab('Saturo', 'week1to3', this)">Add</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="criteria">
+  <h3>✅ Effort</h3>
+  <ul>
+    <li>Completes classwork and homework with care and persistence</li>
+    <li>Stays focused during tasks and avoids giving up easily</li>
+    <li>Tries their best, even when the work is challenging</li>
+    <li>Shows a willingness to improve and learn from feedback</li>
+  </ul>
+
+  <h3>✅ Behaviour</h3>
+  <ul>
+    <li>Shows respect to teachers and classmates</li>
+    <li>Follows classroom rules and routines</li>
+    <li>Listens without interrupting and stays on task</li>
+    <li>Helps create a positive and safe classroom environment</li>
+  </ul>
+
+  <h3>✅ Engagement and Attendance</h3>
+  <ul>
+    <li>Attends class regularly and arrives on time</li>
+    <li>Brings necessary materials and comes prepared</li>
+    <li>Actively participates in lessons and discussions</li>
+    <li>Stays involved and focused during learning activities</li>
+  </ul>
+</div>
+
+<script>
+const openEvalWindows = new Map();
+
+function openStudentFR(studentName) {
+  localStorage.setItem("reportStudent", studentName);
+  window.open("student.html", "_blank");
+}
+
+function saveGrade(studentWeekId, grade) {
+  let grades = JSON.parse(localStorage.getItem("gradeSelections") || "{}");
+  grades[studentWeekId] = grade;
+  localStorage.setItem("gradeSelections", JSON.stringify(grades));
+  updateGradeDisplay(studentWeekId, grade);
+}
+
+function updateGradeDisplay(studentWeekId, grade) {
+  const selectElement = document.querySelector(`[onchange][onchange*='${studentWeekId}']`);
+  if (selectElement && grade !== "") {
+    const container = selectElement.parentElement;
+    selectElement.remove();
+    const gradeDisplay = document.createElement("div");
+    gradeDisplay.textContent = grade;
+    gradeDisplay.style.fontWeight = "bold";
+    gradeDisplay.style.fontSize = "14px";
+    gradeDisplay.style.marginTop = "4px";
+    container.appendChild(gradeDisplay);
+  }
+}
+
+function openEvaluationNewTab(studentName, week, buttonElement) {
+  if (openEvalWindows.size > 0) {
+    alert("Please complete the open evaluation window before opening another.");
+    return;
+  }
+  const url = `eval.html?student=${encodeURIComponent(studentName)}&week=${encodeURIComponent(week)}`;
+  const win = window.open(url, "_blank", "width=700,height=700");
+  openEvalWindows.set(win, { studentName, week, buttonElement });
+}
+
+window.addEventListener("message", (event) => {
+  const data = event.data;
+  if (!data || data.type !== "evaluationSubmit") return;
+
+  for (const [win, info] of openEvalWindows) {
+    if (win === event.source) {
+      const { buttonElement, studentName, week } = info;
+
+      if (buttonElement) {
+        const container = buttonElement.parentElement;
+        buttonElement.remove();
+
+        const commentList = document.createElement("ul");
+        commentList.className = "comment-list";
+        data.selectedComments.forEach(comment => {
+          const li = document.createElement("li");
+          li.textContent = comment;
+          commentList.appendChild(li);
+        });
+        container.appendChild(commentList);
+
+        let allComments = JSON.parse(localStorage.getItem("evaluationComments") || "{}");
+        if (!allComments[studentName]) allComments[studentName] = {};
+        allComments[studentName][week] = data.selectedComments;
+        localStorage.setItem("evaluationComments", JSON.stringify(allComments));
+      }
+
+      win.close();
+      openEvalWindows.delete(win);
+      break;
+    }
+  }
+});
+
+function resetAll() {
+  if (confirm("Are you sure you want to reset all grades and comments?")) {
+    localStorage.removeItem("gradeSelections");
+    localStorage.removeItem("evaluationComments");
+    location.reload();
+  }
+}
+
+window.onload = function () {
+  const grades = JSON.parse(localStorage.getItem("gradeSelections") || "{}");
+  for (const [key, value] of Object.entries(grades)) {
+    updateGradeDisplay(key, value);
+  }
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Report</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    border: 4px solid #d4b800; /* yellow border */
+    max-width: 700px;
+  }
+  .header, .subject {
+    border-bottom: 3px solid #002366; /* dark blue */
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .grades-with-labels {
+    display: grid;
+    grid-template-columns: repeat(4, 50px);
+    gap: 5px;
+    margin: 0 10px 0 0;
+    justify-content: start;
+  }
+  .subject-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  .week-label {
+    text-align: center;
+    font-weight: normal;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 2px;
+  }
+  .grade-box {
+    border: 1px solid #000;
+    padding: 8px 0;
+    text-align: center;
+    font-weight: bold;
+    width: 50px;
+    box-sizing: border-box;
+  }
+  .term-average-box {
+    border: 1px solid #000;
+    padding: 5px 15px;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+  }
+  .subject-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .grade-label {
+    margin-left: 10px;
+  }
+  .student-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #002366;
+    margin-bottom: 10px;
+  }
+  .comments-section {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  .comments-section b {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .comments-section ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="student-name" id="studentNameDisplay">Student: </div>
+
+  <div class="header">
+    <div>Fortnightly Average</div>
+    <div class="grades-with-labels">
+      <div class="grade-box">&nbsp;</div>
+      <div class="grade-box">&nbsp;</div>
+      <div class="grade-box">&nbsp;</div>
+      <div class="grade-box">&nbsp;</div>
+    </div>
+    <div>Term Average <span class="term-average-box">&nbsp;</span></div>
+  </div>
+
+  <!-- Subject 101 (placeholder, unchanged) -->
+  <div class="subject" id="subject101-section">
+    <div class="subject-title">Subject 101</div>
+    <div>
+      <label>Grade</label>
+      <div class="subject-row">
+        <div class="grades-with-labels">
+          <div>
+            <div class="week-label">Wk2</div>
+            <div class="grade-box" id="subject101-Wk2">&nbsp;</div>
+          </div>
+          <div>
+            <div class="week-label">Wk4</div>
+            <div class="grade-box" id="subject101-Wk4">&nbsp;</div>
+          </div>
+          <div>
+            <div class="week-label">Wk6</div>
+            <div class="grade-box" id="subject101-Wk6">&nbsp;</div>
+          </div>
+          <div>
+            <div class="week-label">Wk8</div>
+            <div class="grade-box" id="subject101-Wk8">&nbsp;</div>
+          </div>
+        </div>
+        <span class="term-average-box">&nbsp;</span>
+      </div>
+      <div class="comments-section" id="subject101-comments">
+        <b>Comment/s:</b>
+        <ul></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- English and Society Year 13 -->
+  <div class="subject" id="englishAndSociety-section">
+    <div class="subject-title">English and Society Year 13</div>
+    <div>
+      <label>Total Grade (Wk2)</label>
+      <div class="subject-row">
+        <div class="grades-with-labels">
+          <div>
+            <div class="week-label">Wk2</div>
+            <div class="grade-box" id="english-sum-Wk1to3">&nbsp;</div>
+          </div>
+          <div>
+            <div class="week-label">Wk4</div>
+            <div class="grade-box" id="english-Wk4">&nbsp;</div>
+          </div>
+          <div>
+            <div class="week-label">Wk6</div>
+            <div class="grade-box" id="english-Wk6">&nbsp;</div>
+          </div>
+          <div>
+            <div class="week-label">Wk8</div>
+            <div class="grade-box" id="english-Wk8">&nbsp;</div>
+          </div>
+        </div>
+        <span class="term-average-box">&nbsp;</span>
+      </div>
+      <div class="comments-section" id="englishAndSociety-comments">
+        <b>Comment/s:</b>
+        <ul></ul>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Load student name from localStorage
+  function loadStudentName() {
+    const studentName = localStorage.getItem("reportStudent") || "Unknown Student";
+    document.getElementById("studentNameDisplay").textContent = `Student: ${studentName}`;
+    loadGradesAndComments(studentName);
+  }
+
+  // Map sum of grades to 1, 2, 3 or 4 per your rules
+  function mapSumToGrade(sum) {
+    if (sum >= 10 && sum <= 12) return "4";
+    if (sum >= 7 && sum <= 9) return "3";
+    if (sum >= 4 && sum <= 6) return "2";
+    if (sum >= 1 && sum <= 3) return "1";
+    return "N/A";
+  }
+
+  // Load grades and comments, specifically for English & Society week1to3a,b,c sum and comments
+  function loadGradesAndComments(studentName) {
+    const allGrades = JSON.parse(localStorage.getItem("gradeSelections") || "{}");
+    const allComments = JSON.parse(localStorage.getItem("evaluationComments") || "{}");
+
+    // Calculate sum of week1to3a, b, c grades
+    let sum = 0;
+    ["week1to3a", "week1to3b", "week1to3c"].forEach(k => {
+      const gradeStr = allGrades[`${studentName}-${k}`];
+      const grade = parseInt(gradeStr, 10);
+      if (!isNaN(grade)) {
+        sum += grade;
+      }
+    });
+
+    // Set mapped grade in the English sum box
+    document.getElementById("english-sum-Wk1to3").textContent = mapSumToGrade(sum);
+
+    // For other weeks, show dash
+    ["english-Wk4", "english-Wk6", "english-Wk8"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = "-";
+    });
+
+    // Subject101 grades always dashes
+    ["subject101-Wk2", "subject101-Wk4", "subject101-Wk6", "subject101-Wk8"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = "-";
+    });
+
+    // Load comments for English & Society week1to3
+    const studentComments = allComments[studentName] || {};
+    const comments = studentComments["week1to3"] || [];
+    const commentsContainer = document.querySelector("#englishAndSociety-comments ul");
+    commentsContainer.innerHTML = "";
+    if (comments.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = "No comments.";
+      commentsContainer.appendChild(li);
+    } else {
+      comments.forEach(comment => {
+        const li = document.createElement("li");
+        li.textContent = comment;
+        commentsContainer.appendChild(li);
+      });
+    }
+
+    // Subject 101 comments always blank
+    const subject101Comments = document.querySelector("#subject101-comments ul");
+    subject101Comments.innerHTML = "";
+    const li = document.createElement("li");
+    li.textContent = "No comments.";
+    subject101Comments.appendChild(li);
+  }
+
+  window.onload = loadStudentName;
+</script>
+
+</body>
+</html>
